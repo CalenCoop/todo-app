@@ -15,11 +15,11 @@ app.post("/todos", async (req, res) => {
     const { description } = req.body;
     //INSERT INTO todo(id, desctiption) VALUES (description: description)
     const newTodo = await pool.query(
-      "INSERT INTO todo(description) VALUES($1)",
+      "INSERT INTO todo(description) VALUES($1) RETURNING *",
       [description]
     );
     console.log(description);
-    res.status(200).json({ message: "todo recieved", todo: newTodo });
+    res.status(200).json({ message: "todo recieved", todo: newTodo.rows[0] });
     //going to have to respond with the todo
   } catch (error) {
     console.error(error.message);
@@ -60,7 +60,7 @@ app.delete("/todos/:id", async (req, res) => {
 app.get("/todos", async (req, res) => {
   try {
     const todos = await pool.query("SELECT * from todo");
-    res.status(200).json({ message: "fetched todos", todos: todos });
+    res.status(200).json({ message: "fetched todos", todos: todos.rows });
   } catch (error) {
     console.error(error.message);
   }
