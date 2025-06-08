@@ -35,7 +35,6 @@ app.put("/todos/:id", async (req, res) => {
       [description, id]
     );
     res.status(200).json({ message: "todo has been updated", todo: todo });
-    //have to respond with todo
   } catch (error) {
     console.error(error.message);
   }
@@ -74,6 +73,23 @@ app.put("/todos/:id/completed", async (req, res) => {
       [id]
     );
     res.status(200).json({ message: "todo updated", todo: todo });
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+app.put("/todos/:id/priority", async (req, res) => {
+  const { priority } = req.body;
+  const { id } = req.params;
+  console.log(req.body);
+  try {
+    const todo = await pool.query(
+      "UPDATE todo SET priority = $1 WHERE todo_ids = $2 RETURNING *",
+      [priority, id]
+    );
+    res
+      .status(200)
+      .json({ message: "updated todos priority", todo: todo.rows });
   } catch (error) {
     console.error(error.message);
   }

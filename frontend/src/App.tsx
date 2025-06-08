@@ -7,12 +7,24 @@ import "./App.css";
 
 function App() {
   const [todos, setTodos] = useState<TodoType[]>([]);
+  const [sortByPriority, setSortByPriority] = useState(true);
 
   useEffect(() => {
     useFetchTodos(setTodos);
   }, []);
 
-  const todosElements = todos.map((todo) => (
+  function handleSort() {
+    if (sortByPriority) {
+      return [...todos].sort(
+        (a: TodoType, b: TodoType) => b.priority - a.priority
+      );
+    }
+    return todos;
+  }
+  const sortedTodos = handleSort();
+  console.log("sorted", sortedTodos);
+
+  const todosElements = sortedTodos.map((todo) => (
     <Todo key={todo.todo_ids} todo={todo} setTodos={setTodos} />
   ));
 
@@ -21,6 +33,20 @@ function App() {
       <div>
         <h1>Todo-List</h1>
         <PostForm setTodos={setTodos} />
+        <div className="todo-cols">
+          <div className="todo-task-desc">
+            <span>Task</span>
+          </div>
+          <div className="todo-task-cols">
+            <span>Completed</span>
+            <span>Task</span>
+            <span>Task</span>
+            <span>Mark Completed</span>
+            <span onClick={() => setSortByPriority((val) => !val)}>
+              Priority
+            </span>
+          </div>
+        </div>
         {todosElements}
       </div>
     </>

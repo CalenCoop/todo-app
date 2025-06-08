@@ -8,6 +8,7 @@ export async function useFetchTodos(
     const response = await fetch("http://localhost:3001/todos");
     const data = await response.json();
     console.log("data", data);
+    // data.todos.sort((a: TodoType, b: TodoType) => b.priority - a.priority);
     setState(data.todos);
   } catch (error) {
     console.log(error);
